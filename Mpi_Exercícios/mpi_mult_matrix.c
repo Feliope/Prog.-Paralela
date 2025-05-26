@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <mpi.h>
 
-#define N 4  // Tamanho das matrizes (para este exemplo)
+#define N 8  // Tamanho das matrizes (para este exemplo)
 
 int main(int argc, char *argv[]) {
     int rank, size, i, j, k;
@@ -12,7 +12,6 @@ int main(int argc, char *argv[]) {
     int *local_a;
     int *local_c;
 
-    // Inicializar MPI
     MPI_Init(&argc, &argv);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
@@ -94,7 +93,7 @@ int main(int argc, char *argv[]) {
     // Reunir os resultados em matriz C no processo 0 usando GATHER
     MPI_Gatherv(local_c, local_n * N, MPI_INT, &c[0][0], sendcounts, displs, MPI_INT, 0, MPI_COMM_WORLD);
     
-    // Imprimir a matriz C resultante (apenas no processo 0)
+    // Imprimir a matriz C resultante
     if (rank == 0) {
         printf("Matriz C resultante:\n");
         for (i = 0; i < N; i++) {
@@ -104,8 +103,7 @@ int main(int argc, char *argv[]) {
             printf("\n");
         }
     }
-    
-    // Liberar memória alocada
+  
     free(local_a);
     free(local_c);
     free(sendcounts);
